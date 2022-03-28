@@ -65,7 +65,7 @@ describe('PATCH /api/articles/:article_id', () => {
       .expect(405);
     expect(res.body.message).toBe('invalid input type');
   });
-  test('404: responds with appropriate message when given invalid article id type', async () => {
+  test('405: responds with appropriate message when given invalid article id type', async () => {
     const res = await request(app)
       .patch('/api/articles/nothing')
       .send({ inc_votes: -100 })
