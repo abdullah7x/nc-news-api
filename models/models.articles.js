@@ -1,10 +1,5 @@
 const db = require('../db/connection');
 
-exports.selectAllTopics = async () => {
-  const results = await db.query(`SELECT * FROM topics;`);
-  return results.rows;
-};
-
 exports.editArticleById = async (article_id, inc_votes) => {
   try {
     const results = await db.query(

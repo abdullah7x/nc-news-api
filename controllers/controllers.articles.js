@@ -1,9 +1,4 @@
-const { selectAllTopics, editArticleById } = require('../models/models.app');
-
-exports.getTopics = async (req, res) => {
-  const topics = await selectAllTopics();
-  res.send(topics);
-};
+const { editArticleById } = require('../models/models.articles');
 
 exports.patchArticle = async (req, res, next) => {
   const { inc_votes } = req.body;
