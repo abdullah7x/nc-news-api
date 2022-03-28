@@ -19,3 +19,19 @@ exports.editArticleById = async (article_id, inc_votes) => {
     } else console.log(err);
   }
 };
+
+exports.selectArticle = async (article_id) => {
+  try {
+    const results = await db.query(
+      `SELECT * FROM articles WHERE article_id = $1;`,
+      [article_id]
+    );
+    if (!results.rows.length) {
+      return Promise.reject({ status: 404, message: 'invalid article id' });
+    } else return results.rows[0];
+  } catch (err) {
+    if ((err.code = '22P02')) {
+      return Promise.reject({ status: 405, message: 'invalid input type' });
+    } else console.log(err);
+  }
+};

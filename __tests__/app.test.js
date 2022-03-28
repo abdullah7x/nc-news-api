@@ -73,3 +73,27 @@ describe('PATCH /api/articles/:article_id', () => {
     expect(res.body.message).toBe('invalid input type');
   });
 });
+
+describe('GET /api/articles/:article_id', () => {
+  test('200: returns an object with correct key/values', async () => {
+    const res = await request(app).get('/api/articles/1').expect(200);
+    expect(typeof res.body).toBe('object');
+    expect(res.body.article).toEqual({
+      article_id: expect.any(Number),
+      author: expect.any(String),
+      title: expect.any(String),
+      body: expect.any(String),
+      topic: expect.any(String),
+      created_at: expect.any(String),
+      votes: expect.any(Number),
+    });
+  });
+  test("404: returns not found message when article id doesn't exist", async () => {
+    const res = await request(app).get('/api/articles/100').expect(404);
+    expect(res.body.message).toBe('invalid article id');
+  });
+  test('405: returns invalid input type when given NAN for article id', async () => {
+    const res = await request(app).get('/api/articles/looooool').expect(405);
+    expect(res.body.message).toBe('invalid input type');
+  });
+});
