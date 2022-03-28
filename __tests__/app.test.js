@@ -36,3 +36,42 @@ describe('Default 404 error', () => {
       });
   });
 });
+
+describe('PATCH /api/articles/:article_id', () => {
+  test('200: responds with an object', () => {
+    return request(app)
+      .patch('/api/articles/1')
+      .send({ inc_votes: 1 })
+      .expect(200)
+      .then((res) => {
+        expect(typeof res.body).toBe('object');
+      });
+  });
+  test('200: responds with incremented votes for positive numbers', () => {
+    return request(app)
+      .patch('/api/articles/1')
+      .send({ inc_votes: 100 })
+      .expect(200)
+      .then((res) => {
+        expect(res.body.article.votes).toBe(200);
+      });
+  });
+  test('200: responds with incremented votes for negative numbers', () => {
+    return request(app)
+      .patch('/api/articles/1')
+      .send({ inc_votes: -100 })
+      .expect(200)
+      .then((res) => {
+        expect(res.body.article.votes).toBe(0);
+      });
+  });
+  test('404: responds with appropriate message when given invalid article id', () => {
+    return request(app)
+      .patch('/api/articles/100')
+      .send({ inc_votes: -100 })
+      .expect(404)
+      .then((res) => {
+        expect(res.body.message).toBe('invalid article id');
+      });
+  });
+});
