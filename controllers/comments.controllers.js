@@ -1,5 +1,8 @@
 const { checkArticleExists } = require('../models/articles.models');
-const { selectCommentsById } = require('../models/comments.models');
+const {
+  selectCommentsById,
+  sendComment,
+} = require('../models/comments.models');
 
 exports.getArticleComments = async (req, res, next) => {
   try {
@@ -11,6 +14,17 @@ exports.getArticleComments = async (req, res, next) => {
     const resolved = await Promise.all(promises);
     res.send(resolved[0]);
   } catch (err) {
+    next(err);
+  }
+};
+
+exports.postComment = async (req, res, next) => {
+  try {
+    const { article_id } = req.params;
+    const comment = await sendComment(article_id, req.body);
+    res.status(201).send({ comment });
+  } catch (err) {
+    console.log(err);
     next(err);
   }
 };
