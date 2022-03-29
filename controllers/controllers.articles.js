@@ -36,6 +36,10 @@ exports.getArticleComments = async (req, res, next) => {
     ];
     const resolved = await Promise.all(promises);
     res.send(resolved[0]);
+  } catch (err) {
+    next(err);
+  }
+};
 exports.getAllArticles = async (req, res, next) => {
   try {
     const articles = await selectAllArticles();

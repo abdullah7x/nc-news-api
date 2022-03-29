@@ -112,7 +112,6 @@ describe('GET /api/users', () => {
   });
 });
 
-
 describe('GET /api/articles', () => {
   test('200: responds with an array of correctly formatted article objects', async () => {
     const res = await request(app).get('/api/articles').expect(200);
@@ -130,7 +129,7 @@ describe('GET /api/articles', () => {
     });
   });
 });
-describe.only('GET /api/articles/:article_id/comments', () => {
+describe('GET /api/articles/:article_id/comments', () => {
   test('200: responds with an array of correct length filled with correctly formatted objects', async () => {
     const res = await request(app).get('/api/articles/1/comments').expect(200);
     expect(Array.isArray(res.body)).toBe(true);
@@ -162,3 +161,4 @@ describe.only('GET /api/articles/:article_id/comments', () => {
       .expect(400);
     expect(res.body.message).toBe('bad request');
   });
+});
