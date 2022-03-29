@@ -163,7 +163,7 @@ describe('GET /api/articles/:article_id/comments', () => {
   });
 });
 
-describe.only('POST /api/articles/:article_id/comments', () => {
+describe('POST /api/articles/:article_id/comments', () => {
   test('201: responds with a correctly formatted object', async () => {
     const testComment = {
       username: 'butter_bridge',
@@ -183,7 +183,7 @@ describe.only('POST /api/articles/:article_id/comments', () => {
       votes: 0,
     });
   });
-  test("400: responds with error if attempting to comment on an article that doesn't exist", async () => {
+  test("404: responds with error if attempting to comment on an article that doesn't exist", async () => {
     const testComment = {
       username: 'butter_bridge',
       body: 'Absolutely awful article',
@@ -191,8 +191,8 @@ describe.only('POST /api/articles/:article_id/comments', () => {
     const res = await request(app)
       .post('/api/articles/100/comments')
       .send(testComment)
-      .expect(400);
-    expect(res.body.message).toBe('bad request');
+      .expect(404);
+    expect(res.body.message).toBe('not found');
   });
   test('400: responds with error if incorrect comment format is inputted', async () => {
     const testComment = {
@@ -205,7 +205,7 @@ describe.only('POST /api/articles/:article_id/comments', () => {
       .expect(400);
     expect(res.body.message).toBe('bad request');
   });
-  test('400: responds with error if unknown username is inputted', async () => {
+  test('404: responds with error if unknown username is inputted', async () => {
     const testComment = {
       username: 'Death_Eater',
       body: 'Absolutely awful article',
@@ -213,8 +213,8 @@ describe.only('POST /api/articles/:article_id/comments', () => {
     const res = await request(app)
       .post('/api/articles/1/comments')
       .send(testComment)
-      .expect(400);
-    expect(res.body.message).toBe('bad request');
+      .expect(404);
+    expect(res.body.message).toBe('not found');
   });
   test('400: responds with error if article_id type is incorrect', async () => {
     const testComment = {

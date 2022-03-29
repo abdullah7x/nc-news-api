@@ -30,9 +30,12 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  const badCodes = ['22P02', '23503', '23502'];
+  const badCodes = ['22P02', '23502'];
   if (badCodes.includes(err.code)) {
     res.status(400).send({ message: 'bad request' });
+  }
+  if (err.code === '23503') {
+    res.status(404).send({ message: 'not found' });
   } else {
     next(err);
   }
