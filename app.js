@@ -5,7 +5,10 @@ const {
   getArticle,
   getAllArticles,
 } = require('./controllers/articles.controllers');
-const { getArticleComments } = require('./controllers/comments.controllers');
+const {
+  getArticleComments,
+  postComment,
+} = require('./controllers/comments.controllers');
 const { getUsers } = require('./controllers/users.controllers.');
 
 const app = express();
@@ -18,6 +21,8 @@ app.get('/api/users', getUsers);
 app.get('/api/articles/:article_id/comments', getArticleComments);
 app.get('/api/articles', getAllArticles);
 
+app.post('/api/articles/:article_id/comments', postComment);
+
 app.patch('/api/articles/:article_id', patchArticle);
 
 app.use((req, res, next) => {
@@ -25,7 +30,7 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  const badCodes = ['22P02'];
+  const badCodes = ['22P02', '23503', '23502'];
   if (badCodes.includes(err.code)) {
     res.status(400).send({ message: 'bad request' });
   } else {
