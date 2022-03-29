@@ -58,18 +58,42 @@ describe('PATCH /api/articles/:article_id', () => {
       .expect(404);
     expect(res.body.message).toBe('invalid article id');
   });
-  test('405: responds with appropriate message when given incorrect input type as key or value', async () => {
+  test('400: responds with appropriate message when given incorrect input type as key or value', async () => {
     const res = await request(app)
       .patch('/api/articles/1')
       .send({ inc_votes: 'testing' })
-      .expect(405);
-    expect(res.body.message).toBe('invalid input type');
+      .expect(400);
+    expect(res.body.message).toBe('bad request');
   });
-  test('405: responds with appropriate message when given invalid article id type', async () => {
+  test('400: responds with appropriate message when given invalid article id type', async () => {
     const res = await request(app)
       .patch('/api/articles/nothing')
       .send({ inc_votes: -100 })
-      .expect(405);
-    expect(res.body.message).toBe('invalid input type');
+      .expect(400);
+    expect(res.body.message).toBe('bad request');
+  });
+});
+
+describe('GET /api/articles/:article_id', () => {
+  test('200: returns an object with correct key/values', async () => {
+    const res = await request(app).get('/api/articles/1').expect(200);
+    expect(typeof res.body).toBe('object');
+    expect(res.body.article).toEqual({
+      article_id: expect.any(Number),
+      author: expect.any(String),
+      title: expect.any(String),
+      body: expect.any(String),
+      topic: expect.any(String),
+      created_at: expect.any(String),
+      votes: expect.any(Number),
+    });
+  });
+  test("404: returns not found message when article id doesn't exist", async () => {
+    const res = await request(app).get('/api/articles/100').expect(404);
+    expect(res.body.message).toBe('invalid article id');
+  });
+  test('400: returns invalid input type when given NAN for article id', async () => {
+    const res = await request(app).get('/api/articles/looooool').expect(400);
+    expect(res.body.message).toBe('bad request');
   });
 });
