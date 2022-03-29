@@ -75,7 +75,7 @@ describe('PATCH /api/articles/:article_id', () => {
 });
 
 describe('GET /api/articles/:article_id', () => {
-  test('200: returns an object with correct key/values', async () => {
+  test('200: returns an object with correct keys/values', async () => {
     const res = await request(app).get('/api/articles/1').expect(200);
     expect(typeof res.body).toBe('object');
     expect(res.body.article).toEqual({
@@ -95,5 +95,18 @@ describe('GET /api/articles/:article_id', () => {
   test('400: returns invalid input type when given NAN for article id', async () => {
     const res = await request(app).get('/api/articles/looooool').expect(400);
     expect(res.body.message).toBe('bad request');
+  });
+});
+
+describe('GET /api/users', () => {
+  test('200: responds with an array of correct length with correctly formatted objects', async () => {
+    const res = await request(app).get('/api/users').expect(200);
+    expect(Array.isArray(res.body)).toBe(true);
+    res.body.forEach((user) => {
+      expect(user).toMatchObject({
+        username: expect.any(String),
+      });
+    });
+    expect(res.body.length).toBe(4);
   });
 });
