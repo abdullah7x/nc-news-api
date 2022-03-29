@@ -79,13 +79,14 @@ describe('GET /api/articles/:article_id', () => {
     const res = await request(app).get('/api/articles/1').expect(200);
     expect(typeof res.body).toBe('object');
     expect(res.body.article).toEqual({
-      article_id: expect.any(Number),
+      article_id: 1,
       author: expect.any(String),
       title: expect.any(String),
       body: expect.any(String),
       topic: expect.any(String),
       created_at: expect.any(String),
       votes: expect.any(Number),
+      comment_count: '11',
     });
   });
   test("404: returns not found message when article id doesn't exist", async () => {
