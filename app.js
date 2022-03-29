@@ -1,12 +1,12 @@
 const express = require('express');
-const { getTopics } = require('./controllers/controllers.topics');
+const { getTopics } = require('./controllers/topics.controllers');
 const {
   patchArticle,
   getArticle,
-  getArticleComments,
   getAllArticles,
-} = require('./controllers/controllers.articles');
-const { getUsers } = require('./controllers/controllers.users');
+} = require('./controllers/articles.controllers');
+const { getArticleComments } = require('./controllers/comments.controllers');
+const { getUsers } = require('./controllers/users.controllers.');
 
 const app = express();
 
