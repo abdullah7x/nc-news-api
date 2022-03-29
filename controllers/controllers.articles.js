@@ -3,6 +3,7 @@ const {
   selectArticle,
   selectCommentsById,
   checkArticleExists,
+  selectAllArticles,
 } = require('../models/models.articles');
 
 exports.patchArticle = async (req, res, next) => {
@@ -35,6 +36,10 @@ exports.getArticleComments = async (req, res, next) => {
     ];
     const resolved = await Promise.all(promises);
     res.send(resolved[0]);
+exports.getAllArticles = async (req, res, next) => {
+  try {
+    const articles = await selectAllArticles();
+    res.send(articles);
   } catch (err) {
     next(err);
   }

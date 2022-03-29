@@ -51,3 +51,14 @@ exports.checkArticleExists = async (article_id) => {
     return Promise.reject({ status: 404, message: 'invalid article id' });
   } else return results.rows[0];
 };
+exports.selectAllArticles = async () => {
+  const results = await db.query(
+    `SELECT articles.*, COUNT(comment_id) AS comment_count
+    FROM articles
+    JOIN comments
+    ON articles.article_id = comments.article_id
+    GROUP BY articles.article_id
+    ORDER BY articles.created_at DESC;`
+  );
+  return results.rows;
+};
