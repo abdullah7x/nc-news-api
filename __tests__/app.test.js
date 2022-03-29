@@ -58,19 +58,19 @@ describe('PATCH /api/articles/:article_id', () => {
       .expect(404);
     expect(res.body.message).toBe('invalid article id');
   });
-  test('405: responds with appropriate message when given incorrect input type as key or value', async () => {
+  test('400: responds with appropriate message when given incorrect input type as key or value', async () => {
     const res = await request(app)
       .patch('/api/articles/1')
       .send({ inc_votes: 'testing' })
-      .expect(405);
-    expect(res.body.message).toBe('invalid input type');
+      .expect(400);
+    expect(res.body.message).toBe('bad request');
   });
-  test('405: responds with appropriate message when given invalid article id type', async () => {
+  test('400: responds with appropriate message when given invalid article id type', async () => {
     const res = await request(app)
       .patch('/api/articles/nothing')
       .send({ inc_votes: -100 })
-      .expect(405);
-    expect(res.body.message).toBe('invalid input type');
+      .expect(400);
+    expect(res.body.message).toBe('bad request');
   });
 });
 
@@ -92,8 +92,8 @@ describe('GET /api/articles/:article_id', () => {
     const res = await request(app).get('/api/articles/100').expect(404);
     expect(res.body.message).toBe('invalid article id');
   });
-  test('405: returns invalid input type when given NAN for article id', async () => {
-    const res = await request(app).get('/api/articles/looooool').expect(405);
-    expect(res.body.message).toBe('invalid input type');
+  test('400: returns invalid input type when given NAN for article id', async () => {
+    const res = await request(app).get('/api/articles/looooool').expect(400);
+    expect(res.body.message).toBe('bad request');
   });
 });
