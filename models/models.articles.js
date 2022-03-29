@@ -21,5 +21,4 @@ exports.selectArticle = async (article_id) => {
   if (!results.rows.length) {
     return Promise.reject({ status: 404, message: 'invalid article id' });
   } else return results.rows[0];
-  console.log(results);
 };
