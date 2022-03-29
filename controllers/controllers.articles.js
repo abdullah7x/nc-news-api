@@ -1,4 +1,9 @@
-const { editArticleById, selectArticle } = require('../models/models.articles');
+const {
+  editArticleById,
+  selectArticle,
+  selectCommentsById,
+  checkArticleExists,
+} = require('../models/models.articles');
 
 exports.patchArticle = async (req, res, next) => {
   const { inc_votes } = req.body;
@@ -16,6 +21,20 @@ exports.getArticle = async (req, res, next) => {
     const { article_id } = req.params;
     const article = await selectArticle(article_id);
     res.send({ article });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getArticleComments = async (req, res, next) => {
+  try {
+    const { article_id } = req.params;
+    const promises = [
+      selectCommentsById(article_id),
+      checkArticleExists(article_id),
+    ];
+    const resolved = await Promise.all(promises);
+    res.send(resolved[0]);
   } catch (err) {
     next(err);
   }
