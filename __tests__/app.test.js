@@ -112,6 +112,7 @@ describe('GET /api/users', () => {
   });
 });
 
+
 describe('GET /api/articles', () => {
   test('200: responds with an array of correctly formatted article objects', async () => {
     const res = await request(app).get('/api/articles').expect(200);
@@ -129,3 +130,35 @@ describe('GET /api/articles', () => {
     });
   });
 });
+describe.only('GET /api/articles/:article_id/comments', () => {
+  test('200: responds with an array of correct length filled with correctly formatted objects', async () => {
+    const res = await request(app).get('/api/articles/1/comments').expect(200);
+    expect(Array.isArray(res.body)).toBe(true);
+    expect(res.body.length).toBe(11);
+    res.body.forEach((comment) => {
+      expect(comment).toMatchObject({
+        article_id: expect.any(Number),
+        comment_id: expect.any(Number),
+        votes: expect.any(Number),
+        created_at: expect.any(String),
+        author: expect.any(String),
+        body: expect.any(String),
+      });
+    });
+  });
+  test("404: responds with incorrect article_id message when it does't exist", async () => {
+    const res = await request(app)
+      .get('/api/articles/100/comments')
+      .expect(404);
+    expect(res.body.message).toBe('invalid article id');
+  });
+  test("200: responds with empty array when given an article which doesn't have comments", async () => {
+    const res = await request(app).get('/api/articles/8/comments').expect(200);
+    expect(res.body).toEqual([]);
+  });
+  test('400: responds with bad request when input type is wrong', async () => {
+    const res = await request(app)
+      .get('/api/articles/dollar/comments')
+      .expect(400);
+    expect(res.body.message).toBe('bad request');
+  });

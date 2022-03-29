@@ -28,6 +28,29 @@ exports.selectArticle = async (article_id) => {
   } else return results.rows[0];
 };
 
+exports.selectCommentsById = async (article_id) => {
+  const results = await db.query(
+    `
+  SELECT * 
+  FROM comments
+  WHERE article_id = $1`,
+    [article_id]
+  );
+  return results.rows;
+};
+
+exports.checkArticleExists = async (article_id) => {
+  const results = await db.query(
+    `SELECT * 
+  FROM articles
+  WHERE article_id = $1;`,
+    [article_id]
+  );
+
+  if (!results.rows.length) {
+    return Promise.reject({ status: 404, message: 'invalid article id' });
+  } else return results.rows[0];
+};
 exports.selectAllArticles = async () => {
   const results = await db.query(
     `SELECT articles.*, COUNT(comment_id) AS comment_count

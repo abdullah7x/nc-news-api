@@ -1,6 +1,8 @@
 const {
   editArticleById,
   selectArticle,
+  selectCommentsById,
+  checkArticleExists,
   selectAllArticles,
 } = require('../models/models.articles');
 
@@ -25,6 +27,15 @@ exports.getArticle = async (req, res, next) => {
   }
 };
 
+exports.getArticleComments = async (req, res, next) => {
+  try {
+    const { article_id } = req.params;
+    const promises = [
+      selectCommentsById(article_id),
+      checkArticleExists(article_id),
+    ];
+    const resolved = await Promise.all(promises);
+    res.send(resolved[0]);
 exports.getAllArticles = async (req, res, next) => {
   try {
     const articles = await selectAllArticles();
