@@ -4,7 +4,6 @@ const {
   patchArticle,
   getArticle,
 } = require('./controllers/controllers.articles');
-const res = require('express/lib/response');
 
 const app = express();
 
