@@ -111,3 +111,21 @@ describe('GET /api/users', () => {
     expect(res.body.length).toBe(4);
   });
 });
+
+describe('GET /api/articles', () => {
+  test('200: responds with an array of correctly formatted article objects', async () => {
+    const res = await request(app).get('/api/articles').expect(200);
+    expect(Array.isArray(res.body)).toBe(true);
+    res.body.forEach((article) => {
+      expect(article).toMatchObject({
+        author: expect.any(String),
+        article_id: expect.any(Number),
+        title: expect.any(String),
+        topic: expect.any(String),
+        created_at: expect.any(String),
+        votes: expect.any(Number),
+        comment_count: expect.any(String),
+      });
+    });
+  });
+});
