@@ -40,14 +40,32 @@ exports.checkArticleExists = async (article_id) => {
     return Promise.reject({ status: 404, message: 'invalid article id' });
   } else return results.rows[0];
 };
-exports.selectAllArticles = async () => {
-  const results = await db.query(
-    `SELECT articles.*, COUNT(comment_id) AS comment_count
-    FROM articles
-    JOIN comments
-    ON articles.article_id = comments.article_id
-    GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC;`
-  );
+exports.selectAllArticles = async (sort_by = 'created_at', order = 'desc') => {
+  const validColumns = [
+    'article_id',
+    'title',
+    'topic',
+    'author',
+    'body',
+    'created_at',
+    'votes',
+    'comment_count',
+  ];
+  if (!validColumns.includes(sort_by)) {
+    return Promise.reject({ status: 400, message: 'bad request' });
+  }
+  let queryStr = `SELECT articles.*, COUNT(comment_id) AS comment_count
+  FROM articles
+  JOIN comments
+  ON articles.article_id = comments.article_id
+  GROUP BY articles.article_id`;
+
+  queryStr += ` ORDER BY ${sort_by}`;
+
+  if (/^desc$/i.test(order) || /^asc$/i.test(order)) {
+    queryStr += ` ${order};`;
+  } else return Promise.reject({ status: 400, message: 'bad request' });
+
+  const results = await db.query(queryStr);
   return results.rows;
 };

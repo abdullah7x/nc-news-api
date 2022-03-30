@@ -228,3 +228,54 @@ describe('POST /api/articles/:article_id/comments', () => {
     expect(res.body.message).toBe('bad request');
   });
 });
+
+describe.only('GET /api/articles queries', () => {
+  test('200: sorted by date descending as default', async () => {
+    res = await request(app).get('/api/articles').expect(200);
+    expect(res.body).toBeSortedBy('created_at', { coerce: true });
+  });
+  test('200: sorted by any given column in descending order as default', async () => {
+    res = await request(app)
+      .get('/api/articles?sort_by=article_id')
+      .expect(200);
+    expect(res.body).toBeSortedBy('article_id', {
+      coerce: true,
+      descending: true,
+    });
+    res2 = await request(app)
+      .get('/api/articles?sort_by=comment_count')
+      .expect(200);
+    expect(res2.body).toBeSortedBy('comment_count', {
+      coerce: true,
+      descending: true,
+    });
+  });
+  test('200: sorted by any given column in choice of descending/ascending order', async () => {
+    res = await request(app)
+      .get('/api/articles?sort_by=article_id&order=asc')
+      .expect(200);
+    expect(res.body).toBeSortedBy('article_id', {
+      coerce: true,
+      ascending: true,
+    });
+    res2 = await request(app)
+      .get('/api/articles?sort_by=comment_count&order=asc')
+      .expect(200);
+    expect(res2.body).toBeSortedBy('comment_count', {
+      coerce: true,
+      ascending: true,
+    });
+  });
+  test("400: returns error when sort_by isn't a column", async () => {
+    res = await request(app)
+      .get('/api/articles?sort_by=donkeys&order=asc')
+      .expect(400);
+    expect(res.body.message).toBe('bad request');
+  });
+  test("400: returns error when order isn't asc/desc", async () => {
+    res = await request(app)
+      .get('/api/articles?sort_by=created_at&order=delete')
+      .expect(400);
+    expect(res.body.message).toBe('bad request');
+  });
+});

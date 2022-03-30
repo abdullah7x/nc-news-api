@@ -27,7 +27,8 @@ exports.getArticle = async (req, res, next) => {
 
 exports.getAllArticles = async (req, res, next) => {
   try {
-    const articles = await selectAllArticles();
+    const { sort_by, order } = req.query;
+    const articles = await selectAllArticles(sort_by, order);
     res.send(articles);
   } catch (err) {
     next(err);
