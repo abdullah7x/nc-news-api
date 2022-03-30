@@ -14,7 +14,7 @@ describe('GET /api/topics', () => {
     const res = await request(app).get('/api/topics').expect(200);
     expect(Array.isArray(res.body)).toBe(true);
     res.body.forEach((topic) => {
-      expect(topic).toEqual({
+      expect(topic).toMatchObject({
         slug: expect.any(String),
         description: expect.any(String),
       });
@@ -78,7 +78,7 @@ describe('GET /api/articles/:article_id', () => {
   test('200: returns an object with correct keys/values', async () => {
     const res = await request(app).get('/api/articles/1').expect(200);
     expect(typeof res.body).toBe('object');
-    expect(res.body.article).toEqual({
+    expect(res.body.article).toMatchObject({
       article_id: 1,
       author: expect.any(String),
       title: expect.any(String),
