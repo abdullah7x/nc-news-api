@@ -40,7 +40,19 @@ exports.checkArticleExists = async (article_id) => {
     return Promise.reject({ status: 404, message: 'invalid article id' });
   } else return results.rows[0];
 };
-exports.selectAllArticles = async (sort_by = 'created_at', order = 'desc') => {
+exports.selectAllArticles = async (
+  sort_by = 'created_at',
+  order = 'desc',
+  topic
+) => {
+  const topics = await db.query(`SELECT slug FROM topics;`);
+  const topicsArray = [];
+  topics.rows.forEach((topic) => {
+    topicsArray.push(topic.slug);
+  });
+  if (topic !== undefined && !topicsArray.includes(topic)) {
+    return Promise.reject({ status: 404, message: 'topic not found' });
+  }
   const validColumns = [
     'article_id',
     'title',
@@ -54,18 +66,24 @@ exports.selectAllArticles = async (sort_by = 'created_at', order = 'desc') => {
   if (!validColumns.includes(sort_by)) {
     return Promise.reject({ status: 400, message: 'bad request' });
   }
+  const queryValues = [];
   let queryStr = `SELECT articles.*, COUNT(comment_id) AS comment_count
   FROM articles
   JOIN comments
-  ON articles.article_id = comments.article_id
-  GROUP BY articles.article_id`;
+  ON articles.article_id = comments.article_id`;
 
-  queryStr += ` ORDER BY ${sort_by}`;
+  if (topic) {
+    queryStr += ` WHERE topic = $1`;
+    queryValues.push(topic);
+  }
+
+  queryStr += ` GROUP BY articles.article_id 
+  ORDER BY ${sort_by}`;
 
   if (/^desc$/i.test(order) || /^asc$/i.test(order)) {
     queryStr += ` ${order};`;
   } else return Promise.reject({ status: 400, message: 'bad request' });
 
-  const results = await db.query(queryStr);
+  const results = await db.query(queryStr, queryValues);
   return results.rows;
 };
