@@ -318,3 +318,8 @@ describe('GET /api/articles queries', () => {
     expect(res.body.message).toEqual('topic not found');
   });
 });
+describe('DELETE /api/comments/:comment_id', () => {
+  test('204: responds with an empty response body', () => {
+    return request(app).delete('/api/comments/1').expect(204);
+  });
+});
