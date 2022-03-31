@@ -47,10 +47,7 @@ exports.selectAllArticles = async (
   topic
 ) => {
   const topics = await selectAllTopics();
-  topicsArray = [];
-  topics.forEach((object) => {
-    topicsArray.push(object.slug);
-  });
+  topicsArray = topics.map((object) => object.slug);
   if (topic !== undefined && !topicsArray.includes(topic)) {
     return Promise.reject({ status: 404, message: 'topic not found' });
   }
