@@ -3,7 +3,6 @@ const request = require('supertest');
 const seed = require('../db/seeds/seed');
 const testData = require('../db/data/test-data/index');
 const app = require('../app');
-const res = require('express/lib/response');
 
 beforeEach(() => seed(testData));
 afterAll(() => {
