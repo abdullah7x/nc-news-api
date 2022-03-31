@@ -1,4 +1,5 @@
 const db = require('../db/connection');
+const { selectAllTopics } = require('./topics.models');
 
 exports.editArticleById = async (article_id, inc_votes) => {
   const results = await db.query(
@@ -15,7 +16,7 @@ exports.editArticleById = async (article_id, inc_votes) => {
 
 exports.selectArticle = async (article_id) => {
   const results = await db.query(
-    `SELECT articles.*, COUNT(comment_id) AS comment_count
+    `SELECT articles.*, CAST (COUNT(comment_id) AS INT) AS comment_count
     FROM articles
     JOIN comments
     ON articles.article_id = comments.article_id
@@ -40,14 +41,46 @@ exports.checkArticleExists = async (article_id) => {
     return Promise.reject({ status: 404, message: 'invalid article id' });
   } else return results.rows[0];
 };
-exports.selectAllArticles = async () => {
-  const results = await db.query(
-    `SELECT articles.*, COUNT(comment_id) AS comment_count
-    FROM articles
-    JOIN comments
-    ON articles.article_id = comments.article_id
-    GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC;`
-  );
+exports.selectAllArticles = async (
+  sort_by = 'created_at',
+  order = 'desc',
+  topic
+) => {
+  const topics = await selectAllTopics();
+  topicsArray = topics.map((object) => object.slug);
+  if (topic !== undefined && !topicsArray.includes(topic)) {
+    return Promise.reject({ status: 404, message: 'topic not found' });
+  }
+  const validColumns = [
+    'article_id',
+    'title',
+    'topic',
+    'author',
+    'body',
+    'created_at',
+    'votes',
+    'comment_count',
+  ];
+  if (!validColumns.includes(sort_by)) {
+    return Promise.reject({ status: 400, message: 'bad request' });
+  }
+  if (!/^desc$/i.test(order) && !/^asc$/i.test(order)) {
+    return Promise.reject({ status: 400, message: 'bad request' });
+  }
+  const queryValues = [];
+  let queryStr = `SELECT articles.*, COUNT(comment_id) AS comment_count
+  FROM articles
+  JOIN comments
+  ON articles.article_id = comments.article_id`;
+
+  if (topic) {
+    queryStr += ` WHERE topic = $1`;
+    queryValues.push(topic);
+  }
+
+  queryStr += ` GROUP BY articles.article_id 
+  ORDER BY ${sort_by} ${order};`;
+
+  const results = await db.query(queryStr, queryValues);
   return results.rows;
 };

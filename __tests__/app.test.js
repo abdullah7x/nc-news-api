@@ -86,7 +86,7 @@ describe('GET /api/articles/:article_id', () => {
       topic: expect.any(String),
       created_at: expect.any(String),
       votes: expect.any(Number),
-      comment_count: '11',
+      comment_count: 11,
     });
   });
   test("404: returns not found message when article id doesn't exist", async () => {
@@ -226,6 +226,96 @@ describe('POST /api/articles/:article_id/comments', () => {
       .send(testComment)
       .expect(400);
     expect(res.body.message).toBe('bad request');
+  });
+});
+
+describe('GET /api/articles queries', () => {
+  test('200: sorted by date descending as default', async () => {
+    const res = await request(app).get('/api/articles').expect(200);
+    expect(res.body).toBeSortedBy('created_at', { coerce: true });
+  });
+  test('200: sorted by any given column in descending order as default', async () => {
+    const res = await request(app)
+      .get('/api/articles?sort_by=article_id')
+      .expect(200);
+    expect(res.body).toBeSortedBy('article_id', {
+      coerce: true,
+      descending: true,
+    });
+    const res2 = await request(app)
+      .get('/api/articles?sort_by=comment_count')
+      .expect(200);
+    expect(res2.body).toBeSortedBy('comment_count', {
+      coerce: true,
+      descending: true,
+    });
+  });
+  test('200: sorted by any given column in choice of descending/ascending order', async () => {
+    const res = await request(app)
+      .get('/api/articles?sort_by=article_id&order=asc')
+      .expect(200);
+    expect(res.body).toBeSortedBy('article_id', {
+      coerce: true,
+      ascending: true,
+    });
+    const res2 = await request(app)
+      .get('/api/articles?sort_by=comment_count&order=asc')
+      .expect(200);
+    expect(res2.body).toBeSortedBy('comment_count', {
+      coerce: true,
+      ascending: true,
+    });
+  });
+  test('200: returns in order of choice sorted by date when given no column', async () => {
+    const res = await request(app).get('/api/articles?order=asc').expect(200);
+    expect(res.body).toBeSortedBy('created_at', {
+      coerce: true,
+      ascending: true,
+    });
+    const res2 = await request(app).get('/api/articles?order=desc').expect(200);
+    expect(res2.body).toBeSortedBy('created_at', {
+      coerce: true,
+      descending: true,
+    });
+  });
+  test('200: returns articles on a given topic', async () => {
+    const res = await request(app).get('/api/articles?topic=mitch').expect(200);
+    res.body.forEach((article) => {
+      expect(article.topic).toBe('mitch');
+    });
+  });
+  test('204: returns an empty array when given a topic which exists but has no articles', async () => {
+    const res = await request(app).get('/api/articles?topic=paper').expect(204);
+  });
+  test('200: returns articles of single topic with correct sorting and ordering if given all 3 queries', async () => {
+    const res = await request(app)
+      .get('/api/articles?sort_by=comment_count&order=desc&topic=mitch')
+      .expect(200);
+    res.body.forEach((article) => {
+      expect(article.topic).toBe('mitch');
+    });
+    expect(res.body).toBeSortedBy('comment_count', {
+      coerce: true,
+      descending: true,
+    });
+  });
+  test("400: returns error when sort_by isn't a column", async () => {
+    const res = await request(app)
+      .get('/api/articles?sort_by=donkeys&order=asc')
+      .expect(400);
+    expect(res.body.message).toBe('bad request');
+  });
+  test("400: returns error when order isn't asc/desc", async () => {
+    const res = await request(app)
+      .get('/api/articles?sort_by=created_at&order=delete')
+      .expect(400);
+    expect(res.body.message).toBe('bad request');
+  });
+  test('404: returns error message when topic is not found', async () => {
+    const res = await request(app)
+      .get('/api/articles?topic=football')
+      .expect(404);
+    expect(res.body.message).toEqual('topic not found');
   });
 });
 describe('DELETE /api/comments/:comment_id', () => {
