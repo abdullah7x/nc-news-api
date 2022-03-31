@@ -8,6 +8,7 @@ const {
 const {
   getArticleComments,
   postComment,
+  deleteComment,
 } = require('./controllers/comments.controllers');
 const { getUsers } = require('./controllers/users.controllers.');
 
@@ -24,6 +25,8 @@ app.get('/api/articles', getAllArticles);
 app.post('/api/articles/:article_id/comments', postComment);
 
 app.patch('/api/articles/:article_id', patchArticle);
+
+app.delete('/api/comments/:comment_id', deleteComment);
 
 app.use((req, res, next) => {
   res.status(404).send({ message: 'End point not found' });

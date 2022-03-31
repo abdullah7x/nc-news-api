@@ -228,3 +228,8 @@ describe('POST /api/articles/:article_id/comments', () => {
     expect(res.body.message).toBe('bad request');
   });
 });
+describe.only('DELETE /api/comments/:comment_id', () => {
+  test('204: responds with an empty response body', () => {
+    return request(app).delete('/api/comments/1').expect(204);
+  });
+});
