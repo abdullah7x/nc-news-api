@@ -4,24 +4,103 @@
   },
   "GET /api/topics": {
     "description": "serves an array of all topics",
-    "queries": [],
     "exampleResponse": {
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all topics",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "description": "serves an array of all articles, each in a separate object",
+    "queries": ["topic", "sort_by", "order"],
     "exampleResponse": {
       "articles": [
         {
+          "article_id": 1,
           "title": "Seafood substitutions are increasing",
           "topic": "cooking",
           "author": "weegembump",
           "body": "Text from the article..",
-          "created_at": 1527695953341
+          "created_at": 1527695953341,
+          "votes" : 0,
+          "comment_count" : "2"
         }
       ]
     }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves an object with information on article of given ID",
+    "accepted parameter type" : "number",
+    "exampleResponse": {
+      "article_id": 1,
+      "title" : "article title",
+      "topic": "article topic",
+      "author": "Abdullah",
+      "body": "this is my article",
+      "created_at": "2020-10-11",
+      "votes": 6,
+      "comment_count": 200
+    }
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users with their information",
+    "exampleResponse": [
+      {
+        "username": "death_eater",
+        "name": "abdullah",
+        "avatar_url": "https://www.example.com/avatar.jpg"
+      }
+    ]
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "serves an array including all comments and information on them for any given article ID",
+    "accepted parameter type": "number",
+    "exampleResponse": [
+      {
+        "comment_id": 4,
+        "body": "This is my comment",
+        "article_id": 1,
+        "author": "abdullah",
+        "votes": 28,
+        "created_at": "2018-02-23T12:01:00.000Z"
+      }
+    ]
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "posts comment before serving an object with full information of posted comment",
+    "accepted parameter type": "number",
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 19,
+        "body": "This is my comment",
+        "article_id": 1,
+        "author": "example_author",
+        "votes": 0,
+        "created_at": "2020-07-31T14:11:40.297Z"
+      }
+    },
+    "exampleBody": {
+      "username": "example_author",
+      "body": "This is my comment"
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "increments number of votes for article of given ID by given number before serving an object with the new article information",
+    "accepted parameter type": "number",
+    "exampleResponse": {
+      "article": {
+        "article_id": 1,
+        "title": "Example Article",
+        "topic": "Example topic",
+        "author": "example_author",
+        "body": "This is my article",
+        "created_at": "2017-02-19T20:11:00.000Z",
+        "votes": 101
+      }
+    },
+    "exampleBody": { "inc_votes": 1 }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes comment with given ID number before serving a status 204",
+    "accepted parameter type": "number",
+    "exampleResponse": { "err.status": 204 }
   }
 }
