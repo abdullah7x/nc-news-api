@@ -325,3 +325,21 @@ describe('DELETE /api/comments/:comment_id', () => {
     return request(app).delete('/api/comments/1').expect(204);
   });
 });
+
+describe('GET /api', () => {
+  test('200: responds with an object containing all endpoints', async () => {
+    const res = await request(app).get('/api').expect(200);
+    const expected = {
+      'GET /api': expect.any(Object),
+      'GET /api/topics': expect.any(Object),
+      'GET /api/articles': expect.any(Object),
+      'GET /api/articles/:article_id': expect.any(Object),
+      'GET /api/users': expect.any(Object),
+      'GET /api/articles/:article_id/comments': expect.any(Object),
+      'POST /api/articles/:article_id/comments': expect.any(Object),
+      'PATCH /api/articles/:article_id': expect.any(Object),
+      'DELETE /api/comments/:comment_id': expect.any(Object),
+    };
+    expect(res.body).toEqual(expected);
+  });
+});

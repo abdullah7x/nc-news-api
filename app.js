@@ -11,6 +11,7 @@ const {
   deleteComment,
 } = require('./controllers/comments.controllers');
 const { getUsers } = require('./controllers/users.controllers.');
+const { getEndpoints } = require('./controllers/endpoints.controllers');
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.get('/api/articles/:article_id', getArticle);
 app.get('/api/users', getUsers);
 app.get('/api/articles/:article_id/comments', getArticleComments);
 app.get('/api/articles', getAllArticles);
+app.get('/api', getEndpoints);
 
 app.post('/api/articles/:article_id/comments', postComment);
 
@@ -51,7 +53,7 @@ app.use((err, req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log(err, 'error <<');
+  // console.log(err, 'error <<');
   res.status(500).send({ message: 'internal sever error' });
 });
 
