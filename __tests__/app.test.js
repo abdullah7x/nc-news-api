@@ -129,6 +129,7 @@ describe('GET /api/articles', () => {
     });
   });
 });
+
 describe('GET /api/articles/:article_id/comments', () => {
   test('200: responds with an array of correct length filled with correctly formatted objects', async () => {
     const res = await request(app).get('/api/articles/1/comments').expect(200);
@@ -318,6 +319,7 @@ describe('GET /api/articles queries', () => {
     expect(res.body.message).toEqual('topic not found');
   });
 });
+
 describe('DELETE /api/comments/:comment_id', () => {
   test('204: responds with an empty response body', () => {
     return request(app).delete('/api/comments/1').expect(204);
