@@ -1,4 +1,5 @@
 const db = require('../db/connection');
+const { selectAllTopics } = require('./topics.models');
 
 exports.editArticleById = async (article_id, inc_votes) => {
   const results = await db.query(
@@ -45,10 +46,10 @@ exports.selectAllArticles = async (
   order = 'desc',
   topic
 ) => {
-  const topics = await db.query(`SELECT slug FROM topics;`);
-  const topicsArray = [];
-  topics.rows.forEach((topic) => {
-    topicsArray.push(topic.slug);
+  const topics = await selectAllTopics();
+  topicsArray = [];
+  topics.forEach((object) => {
+    topicsArray.push(object.slug);
   });
   if (topic !== undefined && !topicsArray.includes(topic)) {
     return Promise.reject({ status: 404, message: 'topic not found' });

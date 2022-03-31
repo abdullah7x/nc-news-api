@@ -266,14 +266,14 @@ describe('GET /api/articles queries', () => {
       ascending: true,
     });
   });
-  test('200: returns in order of choice sorted by created_at when given no column', async () => {
+  test('200: returns in order of choice sorted by date when given no column', async () => {
     const res = await request(app).get('/api/articles?order=asc').expect(200);
     expect(res.body).toBeSortedBy('created_at', {
       coerce: true,
       ascending: true,
     });
     const res2 = await request(app).get('/api/articles?order=desc').expect(200);
-    expect(res.body).toBeSortedBy('created_at', {
+    expect(res2.body).toBeSortedBy('created_at', {
       coerce: true,
       descending: true,
     });
@@ -283,6 +283,10 @@ describe('GET /api/articles queries', () => {
     res.body.forEach((article) => {
       expect(article.topic).toBe('mitch');
     });
+  });
+  test('200: returns an empty array when given a topic which exists but has no articles', async () => {
+    const res = await request(app).get('/api/articles?topic=paper').expect(200);
+    expect(res.body).toEqual([]);
   });
   test('200: returns articles of single topic with correct sorting and ordering if given all 3 queries', async () => {
     const res = await request(app)
