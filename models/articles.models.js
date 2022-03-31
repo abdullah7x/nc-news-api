@@ -67,6 +67,9 @@ exports.selectAllArticles = async (
   if (!validColumns.includes(sort_by)) {
     return Promise.reject({ status: 400, message: 'bad request' });
   }
+  if (!/^desc$/i.test(order) && !/^asc$/i.test(order)) {
+    return Promise.reject({ status: 400, message: 'bad request' });
+  }
   const queryValues = [];
   let queryStr = `SELECT articles.*, COUNT(comment_id) AS comment_count
   FROM articles
@@ -79,11 +82,7 @@ exports.selectAllArticles = async (
   }
 
   queryStr += ` GROUP BY articles.article_id 
-  ORDER BY ${sort_by}`;
-
-  if (/^desc$/i.test(order) || /^asc$/i.test(order)) {
-    queryStr += ` ${order};`;
-  } else return Promise.reject({ status: 400, message: 'bad request' });
+  ORDER BY ${sort_by} ${order};`;
 
   const results = await db.query(queryStr, queryValues);
   return results.rows;
