@@ -284,9 +284,8 @@ describe('GET /api/articles queries', () => {
       expect(article.topic).toBe('mitch');
     });
   });
-  test('200: returns an empty array when given a topic which exists but has no articles', async () => {
-    const res = await request(app).get('/api/articles?topic=paper').expect(200);
-    expect(res.body).toEqual([]);
+  test('204: returns an empty array when given a topic which exists but has no articles', async () => {
+    const res = await request(app).get('/api/articles?topic=paper').expect(204);
   });
   test('200: returns articles of single topic with correct sorting and ordering if given all 3 queries', async () => {
     const res = await request(app)
