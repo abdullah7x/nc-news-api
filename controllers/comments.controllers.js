@@ -2,6 +2,7 @@ const { checkArticleExists } = require('../models/articles.models');
 const {
   selectCommentsById,
   sendComment,
+  removeComment,
 } = require('../models/comments.models');
 
 exports.getArticleComments = async (req, res, next) => {
@@ -23,6 +24,16 @@ exports.postComment = async (req, res, next) => {
     const { article_id } = req.params;
     const comment = await sendComment(article_id, req.body);
     res.status(201).send({ comment });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.deleteComment = async (req, res, next) => {
+  try {
+    const { comment_id } = req.params;
+    const result = await removeComment(comment_id);
+    res.status(204).send();
   } catch (err) {
     next(err);
   }
