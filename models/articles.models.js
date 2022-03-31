@@ -16,7 +16,7 @@ exports.editArticleById = async (article_id, inc_votes) => {
 
 exports.selectArticle = async (article_id) => {
   const results = await db.query(
-    `SELECT articles.*, COUNT(comment_id) AS comment_count
+    `SELECT articles.*, CAST (COUNT(comment_id) AS INT) AS comment_count
     FROM articles
     JOIN comments
     ON articles.article_id = comments.article_id

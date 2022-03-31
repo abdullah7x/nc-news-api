@@ -86,7 +86,7 @@ describe('GET /api/articles/:article_id', () => {
       topic: expect.any(String),
       created_at: expect.any(String),
       votes: expect.any(Number),
-      comment_count: '11',
+      comment_count: 11,
     });
   });
   test("404: returns not found message when article id doesn't exist", async () => {
