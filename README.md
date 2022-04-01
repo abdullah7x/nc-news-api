@@ -8,7 +8,7 @@ This server can be used to obtain `articles`, `comments`, `users`, and `topics`,
 
 ## Hosting
 
-### Here is a link to a hosted version of the app: https://my-be-project.herokuapp.com/api
+Here is a link to a hosted version of the app: https://my-be-project.herokuapp.com/api
 
 ## Cloning the repo
 
