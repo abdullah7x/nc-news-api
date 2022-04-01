@@ -20,7 +20,7 @@ git clone <clone link from forked repo>
 
 ## Installing dependencies
 
-In this making of this project the following dependencies were used:
+In the making of this project the following dependencies were used:
 
 - Express.js
 - pg
@@ -42,7 +42,7 @@ A '.env.development' and a '.env.test' file must be created in order to connect 
 
 ## Creating and seeding local databases
 
-In order to create and seed the above mentioned databases and then populate them with information you will merely need to run the following commands in your terminal:
+In order to create and seed the above mentioned databases with information you will merely need to run the following commands in your terminal:
 
 ```
 npm run setup-dbs
