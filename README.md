@@ -59,7 +59,7 @@ npm test
 
 ## Postgres and Node.js
 
-As mentioned above these dependencies are the backbone of this project. The minimum versions required to run this application are `V12.9` and `V17.8.0` respectively. You can check which versions you are using with the below commands:
+As mentioned above these dependencies are the backbone of this project. The minimum versions required to run this application are `V12` and `V17` respectively. You can check which versions you are using with the below commands:
 
 ```
 node -v
