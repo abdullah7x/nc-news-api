@@ -36,9 +36,9 @@ Simply run the following command in your terminal to ensure the necessary depend
 npm i
 ```
 
-## Connecting to the databases
+## Setting environment variables
 
-A '.env.development' and a '.env.test' file must be created in order to connect to one of the two databases provided as part of this project. The first will require the inclusion of 'PGDATABASE=nc news', while the second will require the addition of 'PGDATABASE=nc news test'.
+A '.env.development' and a '.env.test' file must be created which will set the environment variables as needed in order to connect to one of the two databases provided as part of this project. The first will require the inclusion of 'PGDATABASE=nc news', while the second will require the addition of 'PGDATABASE=nc news test'.
 
 ## Creating and seeding local databases
 
